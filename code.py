@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+from matplotlib.widgets import Slider
 
 # Гравитационная постоянная (можно изменить под свои единицы измерения)
 G = 1.0
@@ -80,6 +81,20 @@ def rk4_step(positions, velocities, dt):
 fig, ax = plt.subplots(figsize=(6, 6))
 colors = ['red', 'green', 'blue']
 scat = ax.scatter(positions[:, 0], positions[:, 1], c=colors, s=50)
+
+# Оставляем место под слайдер скорости внизу графика
+plt.subplots_adjust(bottom=0.2)
+
+# Создаём ползунок для управления скоростью
+speed_ax = plt.axes([0.25, 0.05, 0.5, 0.03])
+speed_slider = Slider(speed_ax, 'Скорость', valmin=0.1, valmax=10.0,
+                      valinit=speed_multiplier, valstep=0.1)
+
+def update_speed(val):
+    global speed_multiplier
+    speed_multiplier = speed_slider.val
+
+speed_slider.on_changed(update_speed)
 
 ax.set_xlim(-2, 2)
 ax.set_ylim(-2, 2)
